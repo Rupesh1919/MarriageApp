@@ -58,6 +58,9 @@ namespace MarriageApp.API.Controllers
             var tokenhandler=new JwtSecurityTokenHandler();
             var token=tokenhandler.CreateToken(tokenDescriptor);
             return Ok(new{ token=tokenhandler.WriteToken(token)});
+
+           
+            
         }
         
     }
