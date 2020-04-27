@@ -17,6 +17,8 @@ namespace MarriageApp.API._helpers
             ForMember(dest=>dest.Age,opt=>opt.MapFrom(src=>src.DateofBirth.Age()));
             CreateMap<Photo,PhotoDetailedDto>();
             CreateMap<UserForUpdateDto,User>();
+            CreateMap<Photo,PhotoForReturnDto>();
+            CreateMap<PhotoForCreationDto,Photo>();
             
         }
         
