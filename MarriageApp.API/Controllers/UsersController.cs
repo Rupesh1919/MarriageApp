@@ -34,7 +34,7 @@ namespace MarriageApp.API.Controllers
             var userForList=_mapper.Map<IEnumerable<UserForListDto>>(users);
             return Ok(userForList);
         }
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name="GetUser")]
         public async Task<IActionResult> GetUser(int id){
             var user=await _repo.GetUser(id);
             var userForList=_mapper.Map<UserForDetailedDto>(user);
