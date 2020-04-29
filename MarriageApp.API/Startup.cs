@@ -54,6 +54,7 @@ namespace MarriageApp.API
 
                                                        };
                                                    });
+            services.AddScoped<LogUserActivity>();                                       
         
         }
 

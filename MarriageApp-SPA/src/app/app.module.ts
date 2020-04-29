@@ -6,6 +6,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
+
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
 import { AuthService } from './_services/Auth.service';
@@ -29,6 +30,11 @@ import { MemberEditResolver } from './_resolvers/member-edit.resolver';
 import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 import { FileUploadModule } from 'ng2-file-upload';
+import { TimeagoModule, TimeagoIntl } from 'ngx-timeago';
+import {TimeAgoPipe} from 'time-ago-pipe';
+import { TimeAgoExtendsPipe } from './_services/timeAgoExtends.pipe';
+
+
 
 
 export function tokenGetter(){
@@ -47,8 +53,9 @@ export function tokenGetter(){
       MemberCardComponent,
       MemberDetailComponent,
       MemberEditComponent,
-      PhotoEditorComponent
-      ],
+      PhotoEditorComponent,
+      TimeAgoExtendsPipe
+   ],
    imports: [
       BrowserModule,
       HttpClientModule,
