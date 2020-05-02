@@ -11,6 +11,7 @@ using AutoMapper;
 using MarriageApp.API._helpers;
 using MarriageApp.API.Data;
 using MarriageApp.API.Dtos;
+using MarriageApp.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,9 +32,16 @@ namespace MarriageApp.API.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        public async Task<IActionResult> GetUsers(){
-            var users=await _repo.GetUsers();
+        public async Task<IActionResult> GetUsers([FromQuery]UserParams userParams){
+            var currentuserId =int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var userFromRepo = await _repo.GetUser(currentuserId);
+            userParams.UserId = currentuserId;
+            if(string.IsNullOrEmpty(userParams.Gender)){
+                userParams.Gender = userFromRepo.Gender == "male" ? "female" : "male";
+            }
+            var users=await _repo.GetUsers(userParams);
             var userForList=_mapper.Map<IEnumerable<UserForListDto>>(users);
+            Response.AddPagination(users.CurrentPage, users.PageSize, users.TotalCount,users.TotalPages);
             return Ok(userForList);
         }
         [HttpGet("{id}", Name="GetUser")]
@@ -51,6 +59,25 @@ namespace MarriageApp.API.Controllers
             if(await _repo.SaveAll())
             return NoContent();
             throw new Exception($"Updating user {id} failed to save");
+        }
+        [HttpPost("{id}/like/{recipientId}")]
+        public async Task<IActionResult> LikeUser(int id, int recipientId)
+        {
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            return Unauthorized();
+            var like = await _repo.GetLike(id,recipientId); 
+            if (like!=null)
+             return BadRequest("You already liked the profile");
+            if(await _repo.GetUser(recipientId)== null)
+              return NotFound();
+            like = new Like{
+                LikerId = id,
+                LikeeId = recipientId
+            };
+            _repo.Add<Like>(like);
+            if (await _repo.SaveAll())
+             return Ok();
+            return BadRequest("it cannot be liked");
         }
         
     }

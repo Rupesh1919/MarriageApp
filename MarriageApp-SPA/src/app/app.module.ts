@@ -5,6 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 
 import { AppComponent } from './app.component';
@@ -33,6 +34,9 @@ import { FileUploadModule } from 'ng2-file-upload';
 import { TimeagoModule, TimeagoIntl } from 'ngx-timeago';
 import {TimeAgoPipe} from 'time-ago-pipe';
 import { TimeAgoExtendsPipe } from './_services/timeAgoExtends.pipe';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
+import { ListsResolver } from './_resolvers/lists.resolver';
+
 
 
 
@@ -64,6 +68,8 @@ export function tokenGetter(){
       BrowserAnimationsModule,
       BsDropdownModule.forRoot(),
       BsDatepickerModule.forRoot(),
+      ButtonsModule.forRoot(),
+      PaginationModule.forRoot(),
       RouterModule.forRoot(appRoutes),
       NgxGalleryModule,
       FileUploadModule,
@@ -82,7 +88,8 @@ export function tokenGetter(){
       MemberDetailResolver,
       MemberListResolver,
       MemberEditResolver,
-      PreventUnsavedChanges
+      PreventUnsavedChanges,
+      ListsResolver
    ],
    bootstrap: [
       AppComponent
