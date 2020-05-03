@@ -1,4 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { UserService } from '../_services/user.service';
+import { AuthService } from '../_services/Auth.service';
+import { AlertifyService } from '../_services/alertify.service';
+import { ActivatedRoute } from '@angular/router';
+import { Message } from '../_models/Message';
+import { Pagination, PaginatedResult } from '../_models/Pagination';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-messages',
@@ -6,10 +13,43 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./messages.component.css']
 })
 export class MessagesComponent implements OnInit {
+  messages: Message[];
+  pagination: Pagination;
+  messagesContainer = 'Unread';
 
-  constructor() { }
+  constructor(private userService: UserService, private authService: AuthService, private alertify: AlertifyService,
+              private route: ActivatedRoute ) { }
 
   ngOnInit() {
+    this.route.data.subscribe(data => {
+      this.messages = data['messages'].result;
+      this.pagination = data['messages'].pagination;
+    });
+  }
+  loadMessages(){
+    this.userService.getMessages(this.authService.decodedToken.nameid, this.pagination.currentPage,
+                                  this.pagination.itemsPerPage, this.messagesContainer)
+                                  .subscribe((res: PaginatedResult<Message[]>) => {
+                                    this.messages = res.result;
+                                    this.pagination = res.pagination;
+                                  }, error => {
+                                    this.alertify.error(error);
+                                  });
+  }
+  pageChanged(event: any): void {
+    this.pagination.currentPage = event.page;
+    this.loadMessages();
+  }
+  deletePhoto(id: number){
+    this.alertify.confirm('Are you sure to delete', () => {
+      this.userService.deleteMessage(this.authService.decodedToken.nameid, id)
+                             .subscribe(() => {
+                               this.messages.splice(this.messages.findIndex(m => m.id === id), 1);
+                               this.alertify.success('Your message is deleted');
+                             }, error => {
+                               this.alertify.error('Failed to delete');
+                             });
+    });
   }
 
 }

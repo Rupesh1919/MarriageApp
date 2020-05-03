@@ -36,6 +36,8 @@ import {TimeAgoPipe} from 'time-ago-pipe';
 import { TimeAgoExtendsPipe } from './_services/timeAgoExtends.pipe';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { ListsResolver } from './_resolvers/lists.resolver';
+import { MessagesResolver } from './_resolvers/messages.resolver';
+import { MemberMessageComponent } from './members/member-message/member-message.component';
 
 
 
@@ -58,7 +60,8 @@ export function tokenGetter(){
       MemberDetailComponent,
       MemberEditComponent,
       PhotoEditorComponent,
-      TimeAgoExtendsPipe
+      TimeAgoExtendsPipe,
+      MemberMessageComponent
    ],
    imports: [
       BrowserModule,
@@ -89,7 +92,8 @@ export function tokenGetter(){
       MemberListResolver,
       MemberEditResolver,
       PreventUnsavedChanges,
-      ListsResolver
+      ListsResolver,
+      MessagesResolver
    ],
    bootstrap: [
       AppComponent

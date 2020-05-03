@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { UserService } from 'src/app/_services/user.service';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { User } from 'src/app/_models/user';
 import { ActivatedRoute } from '@angular/router';
 import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gallery-9';
+import { TabsetComponent } from 'ngx-bootstrap/tabs/ngx-bootstrap-tabs';
+import { AuthService } from 'src/app/_services/Auth.service';
 
 @Component({
   selector: 'app-member-detail',
@@ -11,18 +13,23 @@ import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gal
   styleUrls: ['./member-detail.component.css']
 })
 export class MemberDetailComponent implements OnInit {
+  @ViewChild('memberTabs', {static: true}) memberTabs: TabsetComponent;
   lastActive: string;
   user: User;
   galleryOptions: NgxGalleryOptions[];
     galleryImages: NgxGalleryImage[];
 
   constructor(private userService: UserService, private alertify: AlertifyService,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute, private authService: AuthService) { }
 
   ngOnInit() {
     this.route.data.subscribe(data => {
       this.user = data['user'];
       this.lastActive = this.user.lastActive.toString();
+    });
+    this.route.queryParams.subscribe(params => {
+      const selectedTab = params['tab'];
+      this.memberTabs.tabs[selectedTab > 0 ? selectedTab : 0].active = true;
     });
     this.galleryOptions = [
       {
@@ -46,7 +53,8 @@ export class MemberDetailComponent implements OnInit {
         description: photo.description
       });
       }
-      return imageUrls;
+   // tslint:disable-next-line: align
+   return imageUrls;
   }
   // LoadUser(){
   //   // tslint:disable-next-line: max-line-length
@@ -56,5 +64,15 @@ export class MemberDetailComponent implements OnInit {
   //      this.alertify.error(error);
   //     });
   // }
+  selectTab(tabId: number){
+    this.memberTabs.tabs[tabId].active = true ;
+  }
+  sendLike(id: number) {
+    this.userService.sendLike(this.authService.decodedToken.nameid, id).subscribe(data => {
+      this.alertify.success('You have liked: ' + this.user.knownAs);
+    }, error => {
+      this.alertify.error(error);
+    });
+  }
 
 }
