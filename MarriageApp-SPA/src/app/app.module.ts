@@ -43,6 +43,7 @@ import { MemberMessageComponent } from './members/member-message/member-message.
 
 
 
+
 export function tokenGetter(){
    return localStorage.getItem('token');
 }
@@ -77,13 +78,12 @@ export function tokenGetter(){
       NgxGalleryModule,
       FileUploadModule,
       TabsModule.forRoot(),
-      JwtModule.forRoot({
-         config: {
-            tokenGetter,
-            whitelistedDomains: ['localhost:5000'],
-            blacklistedRoutes: ['localhost:5000/api/auth']
-         }
-      })
+      JwtModule.forRoot(\nconfig
+   ],
+   blacklistedRoutes: [
+      'localhost
+   ]
+})
    ],
    providers: [
       AuthService,
