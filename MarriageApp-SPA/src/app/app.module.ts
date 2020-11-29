@@ -78,12 +78,13 @@ export function tokenGetter(){
       NgxGalleryModule,
       FileUploadModule,
       TabsModule.forRoot(),
-      JwtModule.forRoot(\nconfig
-   ],
-   blacklistedRoutes: [
-      'localhost
-   ]
-})
+      JwtModule.forRoot({
+         config: {
+            tokenGetter,
+            whitelistedDomains: ['localhost:5000'],
+            blacklistedRoutes: ['localhost:5000/api/auth']
+         }
+      })
    ],
    providers: [
       AuthService,

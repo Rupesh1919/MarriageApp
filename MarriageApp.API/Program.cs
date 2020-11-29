@@ -29,7 +29,11 @@ namespace MarriageApp.API
                     logger.LogError(ex,"An error occured during migration");
                 }
             }
+            var config=new ConfigurationBuilder().AddEnvironmentVariables("").Build();
+            var url= config["http://localhost:5000"]??"http://*:8080";
+            
             host.Run();
+            
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
